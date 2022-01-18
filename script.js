@@ -1,3 +1,5 @@
+// 
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -46,16 +48,18 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-const productLists = async () => {
-  const objectArray = await fetchProducts();
-  objectArray.forEach(({ id: sku, title: name, thumbnail: image }) => {
-    const returnFunction = createProductItemElement({ sku, name, image });
+const productLists = async (product) => {
+  const objectArray = await fetchProducts(product);
+    console.log(objectArray);
+    objectArray.forEach(({ id, title, thumbnail }) => {
+    const sku = id;
+    const name = title;
+    const image = thumbnail;
     const catchItems = document.querySelector('.items');
-    catchItems.appendChild(returnFunction);
-  });  
+    catchItems.appendChild(createProductItemElement({ sku, name, image }));
+  });
  };
- productLists();
-
+ 
 window.onload = async () => {
-  await productLists();
+  await productLists('computador');
  };
