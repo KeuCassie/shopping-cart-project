@@ -11,23 +11,6 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 function cartItemClickListener(event) {
   // coloque seu código aqui
 }
@@ -39,5 +22,40 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+const itemSelected = async (event) => {
+  const selectedItem = event.target.parentNode.firstChild.innerText;
+  const { id, title, price } = await fetchItem(selectedItem);
+  const elementItem = createCartItemElement({ sku: id, name: title, salePrice: price });
+  const classItem = document.querySelector('.cart__items');
+  classItem.appendChild(elementItem);
+};
 
-window.onload = () => { };
+function createProductItemElement({ sku, name, image }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+  .addEventListener('click', itemSelected);
+  return section;
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+const productLists = async () => {
+  const objectArray = await fetchProducts();
+  objectArray.forEach(({ id: sku, title: name, thumbnail: image }) => {
+    const returnFunction = createProductItemElement({ sku, name, image });
+    const catchItems = document.querySelector('.items');
+    catchItems.appendChild(returnFunction);
+  });  
+ };
+ productLists();
+
+window.onload = async () => {
+  await productLists();
+ };
