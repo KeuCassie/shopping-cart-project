@@ -13,13 +13,6 @@ const removeLoading = () => {
   classItem.remove();
 };
 
-const clearShoppingCart = () => {
- const ol = document.querySelector('.cart__items');
- ol.innerHTML = '';
-};
-const button = document.querySelector('.empty-cart');
-button.addEventListener('click', clearShoppingCart);
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -33,9 +26,21 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+const totalPrice = () => {
+  const itemClass = document.querySelector('.total-price');
+  const liClass = Array.from(document.querySelectorAll('.cart__item'));
+  const liInnerText = liClass.map((element) => element.innerText);
+  const liSplit = liInnerText.reduce((acc, currentValue) => {
+  const splitOne = +currentValue.split('$')[1];
+  return acc + splitOne;
+}, 0);
+ itemClass.innerText = liSplit;
+};
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  return event.target.remove();
+  event.target.remove();
+  totalPrice();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -45,12 +50,22 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+const clearShoppingCart = () => {
+  const ol = document.querySelector('.cart__items');
+  ol.innerHTML = '';
+  totalPrice();
+ };
+ const button = document.querySelector('.empty-cart');
+ button.addEventListener('click', clearShoppingCart);
+
 const itemSelected = async (event) => {
   const selectedItem = event.target.parentNode.firstChild.innerText;
   const { id, title, price } = await fetchItem(selectedItem);
   const elementItem = createCartItemElement({ sku: id, name: title, salePrice: price });
   const classItem = document.querySelector('.cart__items');
   classItem.appendChild(elementItem);
+  totalPrice();
 };
 
 function createProductItemElement({ sku, name, image }) {
@@ -71,7 +86,6 @@ function getSkuFromProductItem(item) {
 
 const productLists = async (product) => {
   const objectArray = await fetchProducts(product);
-    console.log(objectArray);
     objectArray.forEach(({ id, title, thumbnail }) => {
     const sku = id;
     const name = title;
