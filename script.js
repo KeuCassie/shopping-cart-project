@@ -1,13 +1,24 @@
 // 
+const createLoading = () => {
+ const createDiv = document.createElement('div');
+ createDiv.className = 'loading';
+ const header = document.querySelector('header');
+ header.appendChild(createDiv);
+ createDiv.innerText = 'carregando...';
+};
+createLoading();
+
+const removeLoading = () => {
+  const classItem = document.querySelector('.loading');
+  classItem.remove();
+};
+
 const clearShoppingCart = () => {
  const ol = document.querySelector('.cart__items');
  ol.innerHTML = '';
 };
-
-const clearShoppingCartButton = () => {
-  const button = document.querySelector('.empty-cart');
-  button.addEventListener('click', clearShoppingCart);
-};
+const button = document.querySelector('.empty-cart');
+button.addEventListener('click', clearShoppingCart);
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -72,5 +83,5 @@ const productLists = async (product) => {
  
 window.onload = async () => {
   await productLists('computador');
-  clearShoppingCartButton();
+  await removeLoading();
  };
