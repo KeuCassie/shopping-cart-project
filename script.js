@@ -1,6 +1,7 @@
 // 
 const clearShoppingCart = () => {
-
+ const ol = document.querySelector('.cart__items');
+ ol.innerHTML = '';
 };
 
 function createProductImageElement(imageSource) {
@@ -26,6 +27,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', clearShoppingCart);
   return li;
 }
 const itemSelected = async (event) => {
