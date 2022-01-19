@@ -1,4 +1,7 @@
 // 
+const clearShoppingCart = () => {
+
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
