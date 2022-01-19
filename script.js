@@ -4,6 +4,11 @@ const clearShoppingCart = () => {
  ol.innerHTML = '';
 };
 
+const clearShoppingCartButton = () => {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', clearShoppingCart);
+};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -27,8 +32,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  const button = document.querySelector('.empty-cart');
-  button.addEventListener('click', clearShoppingCart);
   return li;
 }
 const itemSelected = async (event) => {
@@ -69,4 +72,5 @@ const productLists = async (product) => {
  
 window.onload = async () => {
   await productLists('computador');
+  clearShoppingCartButton();
  };
